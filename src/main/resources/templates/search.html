@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<title>Title Here</title>
+</head>
+
+<body>
+	<header>
+		<div class="collapse bg-dark" id="navbarHeader">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8 col-md-7 py-4">
+						<h4 class="text-white">このアプリケーションについて</h4>
+						<p class="text-muted">日本郵便にて公開されている全国ないしは一部地域の郵便番号データを検索するアプリケーションです。</p>
+						<p class="text-muted">７桁までの郵便番号または住所の一部を入力して検索できます。</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="navbar navbar-dark bg-dark shadow-sm">
+			<div class="container d-flex justify-content-between">
+				<a href="#" class="navbar-brand d-flex align-items-center"> <strong>郵便番号＆住所検索</strong>
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+		</div>
+	</header>
+	<div class="container">
+		<form action="#" th:action="@{/search}">
+			<div class="input-group mb-3" style="padding: 10px;">
+				<input type="text" name="parameter" class="form-control" placeholder="郵便番号または住所を入力" aria-label="Recipient's username" aria-describedby="button-addon" th:value="${param.parameter}">
+				<div class="input-group-append">
+					<input type="submit" class="btn btn-outline-secondary" id="button-addon" value="検索する">
+				</div>
+			</div>
+		</form>
+
+		<div class="alert alert-info" role="alert" th:if="${!#strings.isEmpty(message)}" th:text="${message}"></div>
+
+		<table class="table" th:if="${!#lists.isEmpty(addressList)}">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">郵便番号</th>
+					<th scope="col">都道府県</th>
+					<th scope="col">市区町村</th>
+					<th scope="col">町域その他</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="address : ${addressList}">
+					<td th:text="${address.zipCode}"></td>
+					<td th:text="${address.prefectureName}"></td>
+					<td th:text="${address.municipalityName}"></td>
+					<td th:text="${address.townName}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script>
+
+	</script>
+</body>
+</html>

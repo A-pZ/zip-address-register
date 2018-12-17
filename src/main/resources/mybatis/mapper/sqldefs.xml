@@ -30,4 +30,44 @@
 	<delete id="deleteAll">
 		DELETE FROM ADDRESS
 	</delete>
+
+	<select id="searchFromZipCode" parameterType="string" resultType="com.github.apz.model.Address">
+		<bind name="pattern" value="'%' + _parameter + '%'" />
+		SELECT
+			ALL_REGIN_PUBLIC_COMPANY as allRegionPublicCompanyCode,
+			OLD_ZIPCODE as oldZipCode,
+			ZIPCODE as zipCode,
+			PREFECTURE_NAME_KANA as prefectureNameKana,
+			MUNICIPALITY_NAME_KANA as municipalityNameKana,
+			TOWN_NAME_KANA as townNameKana,
+			PREFECTURE_NAME as prefectureName,
+			MUNICIPALITY_NAME as municipalityName,
+			TOWN_NAME as townName
+		FROM
+			ADDRESS
+		WHERE
+			ZIPCODE like #{pattern}
+	</select>
+
+	<select id="searchFromWord" parameterType="string" resultType="com.github.apz.model.Address">
+		<bind name="pattern" value="'%' + _parameter + '%'" />
+		SELECT
+			ALL_REGIN_PUBLIC_COMPANY as allRegionPublicCompanyCode,
+			OLD_ZIPCODE as oldZipCode,
+			ZIPCODE as zipCode,
+			PREFECTURE_NAME_KANA as prefectureNameKana,
+			MUNICIPALITY_NAME_KANA as municipalityNameKana,
+			TOWN_NAME_KANA as townNameKana,
+			PREFECTURE_NAME as prefectureName,
+			MUNICIPALITY_NAME as municipalityName,
+			TOWN_NAME as townName
+		FROM
+			ADDRESS
+		WHERE
+			PREFECTURE_NAME like #{pattern}
+		OR
+			MUNICIPALITY_NAME like #{pattern}
+		OR
+			TOWN_NAME like #{pattern}
+	</select>
 </mapper>
