@@ -22,8 +22,13 @@ public class ZipAddressRegisterRepository {
 	private final SqlSessionTemplate sqlSessionTemplate;
 
 	public void register(List<Address> addressList) {
-		addressList.forEach(address -> {
+		addressList.stream()
+			.forEach(address -> {
 			sqlSessionTemplate.insert("address.register", address);
 		});
+	}
+
+	public void deleteAll() {
+		sqlSessionTemplate.delete("address.deleteAll");
 	}
 }

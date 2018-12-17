@@ -4,6 +4,7 @@
 package com.github.apz.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -26,7 +27,12 @@ public class ZipAddressRegisterService {
 	private final CSVReadRepository csvReadRepository;
 	private final ZipAddressRegisterRepository zipAddressRegisterRepository;
 
-	public boolean register(String filename) throws IOException {
+	/**
+	 * ファイル名を指定したCSVのインポート。
+	 * @param filename ファイル名（クラスパス内）
+	 * @throws IOException
+	 */
+	public void register(String filename) throws IOException {
 		log.info("CSV filename: {}", filename);
 		List<Address> addressList = csvReadRepository.read(filename);
 
@@ -34,6 +40,30 @@ public class ZipAddressRegisterService {
 		zipAddressRegisterRepository.register(addressList);
 
 		log.info("register success.");
-		return true;
+	}
+
+	public void register(InputStream is) throws IOException {
+		log.info("CSV uploaded: {}", is.available());
+		List<Address> addressList = csvReadRepository.read(is);
+
+		log.info("register count: {}", addressList.size());
+		zipAddressRegisterRepository.register(addressList);
+
+		log.info("register success.");
+	}
+
+	public List<Address> upload(InputStream is) throws IOException {
+		log.info("CSV uploaded: {}", is.available());
+		List<Address> addressList = csvReadRepository.read(is);
+
+		log.info("register count: {}", addressList.size());
+		return addressList;
+	}
+
+	public void register(List<Address> addressList) {
+		zipAddressRegisterRepository.deleteAll();
+
+		zipAddressRegisterRepository.register(addressList);
+		log.info("register success.");
 	}
 }

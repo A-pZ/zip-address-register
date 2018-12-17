@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="./css/address.csv" th:href="@{/css/address.css}"/>
+<title>郵便番号アップロード＆インポート</title>
+</head>
+
+<body>
+	<header>
+		<div class="collapse bg-dark" id="navbarHeader">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-8 col-md-7 py-4">
+						<h4 class="text-white">このアプリケーションについて</h4>
+						<p class="text-muted">日本郵便にて公開されている全国ないしは一部地域の郵便番号データCSVをインポートし、データベースに保管するアプリケーションです。</p>
+						<p class="text-muted">ダウンロードしたzipファイルを解凍したCSVファイルをそのままアップロードしてください。
+						なお、CSVデータはShift-JISで提供されたものをそのまま使えます。</p>
+						<p class="text-muted">CSVをアップロードが成功すると、すぐにデータベースのインポートが始まります。データベースのインポートは、各都道府県別なら2分～10分、全国の場合は1時間半ほどかかります。</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="navbar navbar-dark bg-dark shadow-sm">
+			<div class="container d-flex justify-content-between">
+				<a href="#" class="navbar-brand d-flex align-items-center"> <strong>郵便番号アップロード＆インポート</strong>
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+		</div>
+	</header>
+
+	<div class="container">
+		<form class="form-horizontal" id="filedropform" method="POST">
+			<div class="form-group">
+				<div id="filedrop" class="filedrop">
+					<p>アップロードする郵便番号CSVファイルをこの枠の中へドロップしてください</p>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div class="modal hide" th:replace="modal :: modal"></div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	<script>
+		/*<![CDATA[*/
+		var modalOptions = {
+			show : false
+		}
+
+		$(function() {
+			if (!window.FileReader) {
+				alert("File APIがサポートされていません。");
+				return false;
+			}
+
+			// アップロードのdiv要素
+			var filedrop = $("#filedrop");
+
+			// デフォルトイベントのキャンセルを関数化
+			var eventCancel = function(event) {
+				event.preventDefault();
+				event.stopPropagation();
+				return false;
+			}
+
+			// ドロップイベントを関数化
+			var dropfileHandler = function(event) {
+				event.preventDefault();
+
+				var files = event.originalEvent.dataTransfer.files;
+
+				uploadFiles(files);
+			};
+
+			// イベントを関連付け
+			filedrop.bind("dragenter", eventCancel);
+			filedrop.bind("dragover", eventCancel);
+			filedrop.bind("drop", dropfileHandler);
+
+			// モーダル定義
+			$('#modal').modal(modalOptions);
+		});
+
+		var uploadFiles = function(files) {
+			var formData = new FormData();
+			var filesLength = files.length;
+			for (var i = 0; i < filesLength; i++) {
+				formData.append("uploadfile", files[i]);
+			}
+
+			displayPreUpload();
+
+			$.ajax({
+				url : './register/upload',
+				type : 'POST',
+				data : formData,
+				processData : false,
+				contentType : false,
+				success : function(data) {
+					displayModal(data);
+					window.setTimeout(processRegister(), 1250);
+				},
+				failure : function(data) {
+					displayModal(data);
+					return;
+				}
+			});
+		};
+
+		var processRegister = function() {
+			$.ajax({
+				url : './register/register',
+				type : 'POST',
+				success : function(data) {
+					displayModal(data);
+				},
+				failure : function(data) {
+					displayModal(data);
+					return;
+				}
+			});
+		}
+
+		var displayModal = function(data) {
+			var status = data.status;
+			var title = data.title;
+			var message = data.message;
+
+			$("#modalTitle").text(title);
+			$("#modalBody").text(message);
+
+			$("#modal").modal('show');
+		};
+
+		var displayPreUpload = function() {
+			var data = new Object();
+			data.status = "200";
+			data.title = "アップロードを受け付けました";
+			data.message = "現在アップロードしたファイルを読み込み中です。しばらくお待ちください。";
+
+			displayModal(data);
+		}
+		/*]]>*/
+	</script>
+</body>
+</html>

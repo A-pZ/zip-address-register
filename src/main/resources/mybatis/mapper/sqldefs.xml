@@ -26,4 +26,8 @@
 			#{townName}
 		)
 	</insert>
+
+	<delete id="deleteAll">
+		DELETE FROM ADDRESS
+	</delete>
 </mapper>

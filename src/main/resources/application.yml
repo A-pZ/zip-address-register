@@ -2,6 +2,10 @@ spring:
   profiles:
     active:
     - mariadb
+  servlet:
+    multipart:
+      max-file-size: 128MB
+      max-request-size: 128MB
 mybatis:
   config-location: classpath:/mybatis/mybatis-config.xml
   mapper-locations:

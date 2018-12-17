@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -25,16 +26,17 @@ public class CSVReadRepository {
 	private final ResourceLoader resourceLoader;
 
 	public List<Address> read(String pathString) throws IOException {
+		return read(getCsv(pathString));
+	}
 
+	public List<Address> read(InputStream is) throws IOException {
 		BeanMappingFactory beanMappingFactory = new BeanMappingFactory();
         beanMappingFactory.getConfiguration().setBeanFactory(csvBeanFactory);
 
-		//BeanMapping<Address> beanMapping = beanMappingFactory.create(Address.class);
+        BufferedReader bufferedReader =
+				new BufferedReader(new InputStreamReader(is, Charset.forName("Windows-31J")));
 
-		BufferedReader bufferedReader =
-				new BufferedReader(new InputStreamReader(getCsv(pathString)));
-
-		CsvAnnotationBeanReader<Address> csvReader = new CsvAnnotationBeanReader<> (
+        CsvAnnotationBeanReader<Address> csvReader = new CsvAnnotationBeanReader<> (
 				Address.class,
 				bufferedReader,
 				CsvPreference.STANDARD_PREFERENCE
