@@ -6,6 +6,9 @@ spring:
     multipart:
       max-file-size: 128MB
       max-request-size: 128MB
+server:
+  servlet:
+    context-path: /zipcode
 mybatis:
   config-location: classpath:/mybatis/mybatis-config.xml
   mapper-locations:
