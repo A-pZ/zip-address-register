@@ -19,17 +19,6 @@ class CSVReadRepositoryTest extends Specification {
 	@Autowired
 	CSVReadRepository repo;
 
-	def "読み込みテスト＆検証"() {
-		when:
-		List<Address> result = repo.read("KEN_TEST.CSV")
-
-		then:
-		noExceptionThrown()
-
-		result
-		result.size() == 2
-	}
-
 	def "全件読み込みテスト"() {
 		when:
 		List<Address> result = repo.read("KEN_ALL.CSV")
