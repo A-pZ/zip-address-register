@@ -32,7 +32,7 @@
 	</delete>
 
 	<select id="searchFromZipCode" parameterType="string" resultType="com.github.apz.model.Address">
-		<bind name="pattern" value="'%' + _parameter + '%'" />
+		<bind name="pattern" value="_parameter + '%'" />
 		SELECT
 			ALL_REGIN_PUBLIC_COMPANY as allRegionPublicCompanyCode,
 			OLD_ZIPCODE as oldZipCode,

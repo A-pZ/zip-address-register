@@ -22,7 +22,7 @@ public class ZipAddressSearchRepository {
 	private final SqlSessionTemplate sqlSessionTemplate;
 
 	/**
-	 * 郵便番号で検索する。
+	 * 郵便番号で検索する。Ver1.0.1から前方一致のみに修正。
 	 * @param zipCode 郵便番号
 	 * @return 検索結果
 	 */
@@ -38,4 +38,5 @@ public class ZipAddressSearchRepository {
 	public List<Address> searchFromWord(String word) {
 		return sqlSessionTemplate.selectList("address.searchFromWord", word);
 	}
+
 }
