@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.github.apz</groupId>
 	<artifactId>zip-address-register</artifactId>
-	<version>1.0.1-RELEASE</version>
+	<version>1.0.2-RELEASE</version>
 	<name>zip-address-register</name>
 	<description>zip-address-register</description>
 	<packaging>war</packaging>
