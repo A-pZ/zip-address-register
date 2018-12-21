@@ -30,5 +30,9 @@ spring:
     url: jdbc:mariadb://127.0.0.1:3306/address
     username: root
     password: password
+    hikari:
+      connection-test-query: "SELECT 1"
+      idle-timeout: 100000
+      max-lifetime: 3000000
   flyway:
     enabled: false
